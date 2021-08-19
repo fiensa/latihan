@@ -104,7 +104,7 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
     /**
      * Gets the fallback locales.
      *
-     * @return array
+     * @return array The fallback locales
      */
     public function getFallbackLocales()
     {

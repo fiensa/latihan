@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Tests\Carbon;
 
 use Carbon\Carbon;
-use Generator;
 use Tests\AbstractTestCase;
 
 class ModifyNearDSTChangeTest extends AbstractTestCase
@@ -49,21 +48,25 @@ class ModifyNearDSTChangeTest extends AbstractTestCase
         $this->assertSame($expected, $date->format('c'));
     }
 
-    public function getTransitionTests(): Generator
+    public function getTransitionTests()
     {
+
         // arguments:
         // - Date string to Carbon::parse in America/New_York.
         // - Hours to add
         // - Resulting string in 'c' format
+        $tests = [
+            // testForwardTransition
+            // When standard time was about to reach 2010-03-14T02:00:00-05:00 clocks were turned forward 1 hour to
+            // 2010-03-14T03:00:00-04:00 local daylight time instead
+            ['2010-03-14T00:00:00', 24, '2010-03-15T00:00:00-04:00'],
 
-        // testForwardTransition
-        // When standard time was about to reach 2010-03-14T02:00:00-05:00 clocks were turned forward 1 hour to
-        // 2010-03-14T03:00:00-04:00 local daylight time instead
-        yield ['2010-03-14T00:00:00', 24, '2010-03-15T00:00:00-04:00'];
+            // testBackwardTransition
+            // When local daylight time was about to reach 2010-11-07T02:00:00-04:00 clocks were turned backward 1 hour
+            // to 2010-11-07T01:00:00-05:00 local standard time instead
+            ['2010-11-07T00:00:00', 24, '2010-11-08T00:00:00-05:00'],
+        ];
 
-        // testBackwardTransition
-        // When local daylight time was about to reach 2010-11-07T02:00:00-04:00 clocks were turned backward 1 hour
-        // to 2010-11-07T01:00:00-05:00 local standard time instead
-        yield ['2010-11-07T00:00:00', 24, '2010-11-08T00:00:00-05:00'];
+        return $tests;
     }
 }

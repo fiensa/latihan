@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace Tests\CarbonPeriod;
 
-use BadMethodCallException;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Tests\AbstractTestCase;
@@ -20,9 +19,10 @@ class StrictModeTest extends AbstractTestCase
 {
     public function testCallWithStrictMode()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method foobar does not exist.'
-        ));
+        );
 
         /** @var mixed $period */
         $period = CarbonPeriod::create();

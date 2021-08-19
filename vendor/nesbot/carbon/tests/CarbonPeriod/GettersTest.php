@@ -253,19 +253,21 @@ class GettersTest extends AbstractTestCase
 
     public function testOverlapsErrorForNullEnd()
     {
-        $this->expectExceptionObject(new UnreachableException(
+        $this->expectException(UnreachableException::class);
+        $this->expectExceptionMessage(
             "Could not calculate period end without either explicit end or recurrences.\n".
             "If you're looking for a forever-period, use ->setRecurrences(INF)."
-        ));
+        );
 
         CarbonPeriod::create('2019-01-26 10:30:12', null)->overlaps('R2/2019-01-31T10:30:45Z/P2D');
     }
 
     public function testOverlapsErrorForMaxAttempts()
     {
-        $this->expectExceptionObject(new UnreachableException(
+        $this->expectException(UnreachableException::class);
+        $this->expectExceptionMessage(
             'Could not calculate period end after iterating 10000 times.'
-        ));
+        );
 
         $period = CarbonPeriod::create('2019-01-26 10:30:12', CarbonInterval::minute(), 98282828);
         $period->addFilter(function ($date) {
@@ -357,7 +359,8 @@ class GettersTest extends AbstractTestCase
 
     public function testUnknownGetter()
     {
-        $this->expectExceptionObject(new UnknownGetterException('middle'));
+        $this->expectException(UnknownGetterException::class);
+        $this->expectExceptionMessage("Unknown getter 'middle'");
 
         CarbonPeriod::create('2019-08-01', '2019-08-15')->get('middle');
     }

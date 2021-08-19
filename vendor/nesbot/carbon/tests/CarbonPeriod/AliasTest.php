@@ -11,11 +11,9 @@ declare(strict_types=1);
  */
 namespace Tests\CarbonPeriod;
 
-use BadMethodCallException;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class AliasTest extends AbstractTestCase
@@ -174,9 +172,10 @@ class AliasTest extends AbstractTestCase
 
     public function testCallInvalidAlias()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method foobar does not exist.'
-        ));
+        );
 
         CarbonPeriod::foobar();
     }
@@ -195,9 +194,10 @@ class AliasTest extends AbstractTestCase
 
     public function testModifyIntoEmptyDateInterval()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Empty interval is not accepted.'
-        ));
+        );
 
         CarbonPeriod::days(0);
     }

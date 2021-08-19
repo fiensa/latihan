@@ -15,9 +15,6 @@ use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
 use Closure;
-use DateTime;
-use Exception;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class DiffTest extends AbstractTestCase
@@ -1198,7 +1195,7 @@ class DiffTest extends AbstractTestCase
 
     public function testDiffForHumansWithDateTimeInstance()
     {
-        $feb15 = new DateTime('2015-02-15');
+        $feb15 = new \DateTime('2015-02-15');
         $mar15 = Carbon::parse('2015-03-15');
         $this->assertSame('1 month after', $mar15->diffForHumans($feb15));
     }
@@ -1225,7 +1222,7 @@ class DiffTest extends AbstractTestCase
     public function testDiffWithDateTime()
     {
         $dt1 = Carbon::createFromDate(2000, 1, 25)->endOfDay();
-        $dt2 = new DateTime('2000-01-10');
+        $dt2 = new \DateTime('2000-01-10');
 
         $this->assertSame(383, $dt1->diffInHours($dt2));
     }
@@ -1508,25 +1505,27 @@ class DiffTest extends AbstractTestCase
 
     public function testDiffWithInvalidType()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Expected null, string, DateTime or DateTimeInterface, integer given'
-        ));
+        );
 
         Carbon::createFromDate(2000, 1, 25)->diffInHours(10);
     }
 
     public function testDiffWithInvalidObject()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Expected null, string, DateTime or DateTimeInterface, Carbon\CarbonInterval given'
-        ));
+        );
 
         Carbon::createFromDate(2000, 1, 25)->diffInHours(new CarbonInterval());
     }
 
     public function testDiffForHumansWithIncorrectDateTimeStringWhichIsNotACarbonInstance()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage(
             'Failed to parse time string (2018-04-13-08:00:00) at position 16'
         );
@@ -1667,14 +1666,6 @@ class DiffTest extends AbstractTestCase
 
         $this->assertSame('+ 00-00-00 00:00:00.322766', $startDate->diffAsCarbonInterval($endDate)->format('%R %Y-%M-%D %H:%I:%S.%F'));
         $this->assertSame(0, $startDate->diffInSeconds($endDate));
-    }
-
-    public function testPHPBug80974()
-    {
-        $this->assertSame(3, Carbon::parse('2018-07-01 America/Toronto')->diff('2018-07-02 America/Vancouver')->h);
-        $this->assertSame(0, Carbon::parse('2018-07-01')->utc()->diff('2018-07-02')->days);
-        $this->assertSame(1, Carbon::parse('2018-07-01')->utc()->diff(Carbon::parse('2018-07-02'))->days);
-        $this->assertSame(1, Carbon::parse('2018-07-01')->diff(Carbon::parse('2018-07-02')->utc())->days);
     }
 
     public function testDiffWithZeroAndNonZeroMicroseconds()

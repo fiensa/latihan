@@ -12,10 +12,7 @@ declare(strict_types=1);
 namespace Tests\Carbon;
 
 use \DateTime;
-use BadMethodCallException;
 use Carbon\Carbon;
-use Generator;
-use InvalidArgumentException;
 use stdClass;
 use Tests\AbstractTestCase;
 
@@ -663,9 +660,10 @@ class IsTest extends AbstractTestCase
 
     public function testIsSameAsWithInvalidArgument()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Expected null, string, DateTime or DateTimeInterface, stdClass given'
-        ));
+        );
 
         $current = Carbon::createFromDate(2012, 1, 2);
         $current->isSameAs('Y-m-d', new stdClass());
@@ -926,46 +924,50 @@ class IsTest extends AbstractTestCase
         $this->assertFalse(Carbon::hasFormatWithModifiers('1975705-01', 'Y#m#d'));
     }
 
-    public function getFormatLetters(): Generator
+    public function getFormatLetters()
     {
-        yield ['d'];
-        yield ['D'];
-        yield ['j'];
-        yield ['l'];
-        yield ['N'];
-        yield ['S'];
-        yield ['w'];
-        yield ['z'];
-        yield ['W'];
-        yield ['F'];
-        yield ['m'];
-        yield ['M'];
-        yield ['n'];
-        yield ['t'];
-        yield ['L'];
-        yield ['o'];
-        yield ['Y'];
-        yield ['y'];
-        yield ['a'];
-        yield ['A'];
-        yield ['B'];
-        yield ['g'];
-        yield ['G'];
-        yield ['h'];
-        yield ['H'];
-        yield ['i'];
-        yield ['s'];
-        yield ['u'];
-        yield ['v'];
-        yield ['e'];
-        yield ['I'];
-        yield ['O'];
-        yield ['P'];
-        yield ['T'];
-        yield ['Z'];
-        yield ['U'];
-        yield ['c'];
-        yield ['r'];
+        return array_map(static function ($letter) {
+            return [$letter];
+        }, [
+            'd',
+            'D',
+            'j',
+            'l',
+            'N',
+            'S',
+            'w',
+            'z',
+            'W',
+            'F',
+            'm',
+            'M',
+            'n',
+            't',
+            'L',
+            'o',
+            'Y',
+            'y',
+            'a',
+            'A',
+            'B',
+            'g',
+            'G',
+            'h',
+            'H',
+            'i',
+            's',
+            'u',
+            'v',
+            'e',
+            'I',
+            'O',
+            'P',
+            'T',
+            'Z',
+            'U',
+            'c',
+            'r',
+        ]);
     }
 
     /**
@@ -991,9 +993,10 @@ class IsTest extends AbstractTestCase
 
     public function testIsSameFoobar()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method isSameFoobar does not exist.'
-        ));
+        );
 
         /** @var mixed $date */
         $date = Carbon::parse('12:00:00');
@@ -1002,9 +1005,10 @@ class IsTest extends AbstractTestCase
 
     public function testIsCurrentFoobar()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method isCurrentFoobar does not exist.'
-        ));
+        );
 
         /** @var mixed $date */
         $date = Carbon::parse('12:00:00');

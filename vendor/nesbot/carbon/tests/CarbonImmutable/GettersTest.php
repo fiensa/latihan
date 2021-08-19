@@ -12,16 +12,13 @@ declare(strict_types=1);
 namespace Tests\CarbonImmutable;
 
 use Carbon\CarbonImmutable as Carbon;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class GettersTest extends AbstractTestCase
 {
     public function testGettersThrowExceptionOnUnknownGetter()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
-            "Unknown getter 'doesNotExit'"
-        ));
+        $this->expectException(\InvalidArgumentException::class);
 
         /** @var mixed $d */
         $d = Carbon::create(1234, 5, 6, 7, 8, 9);

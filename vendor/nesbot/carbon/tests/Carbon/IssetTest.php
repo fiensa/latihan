@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Tests\Carbon;
 
 use Carbon\Carbon;
-use Generator;
 use Tests\AbstractTestCase;
 
 class IssetTest extends AbstractTestCase
@@ -22,32 +21,34 @@ class IssetTest extends AbstractTestCase
         $this->assertFalse(isset(Carbon::create(1234, 5, 6, 7, 8, 9)->sdfsdfss));
     }
 
-    public function providerTestIssetReturnTrueForProperties(): Generator
+    public function providerTestIssetReturnTrueForProperties()
     {
-        yield ['age'];
-        yield ['day'];
-        yield ['dayOfWeek'];
-        yield ['dayOfYear'];
-        yield ['daysInMonth'];
-        yield ['dst'];
-        yield ['hour'];
-        yield ['local'];
-        yield ['micro'];
-        yield ['minute'];
-        yield ['month'];
-        yield ['offset'];
-        yield ['offsetHours'];
-        yield ['quarter'];
-        yield ['second'];
-        yield ['timestamp'];
-        yield ['timezone'];
-        yield ['timezoneName'];
-        yield ['tz'];
-        yield ['tzName'];
-        yield ['utc'];
-        yield ['weekOfMonth'];
-        yield ['weekOfYear'];
-        yield ['year'];
+        return [
+            ['age'],
+            ['day'],
+            ['dayOfWeek'],
+            ['dayOfYear'],
+            ['daysInMonth'],
+            ['dst'],
+            ['hour'],
+            ['local'],
+            ['micro'],
+            ['minute'],
+            ['month'],
+            ['offset'],
+            ['offsetHours'],
+            ['quarter'],
+            ['second'],
+            ['timestamp'],
+            ['timezone'],
+            ['timezoneName'],
+            ['tz'],
+            ['tzName'],
+            ['utc'],
+            ['weekOfMonth'],
+            ['weekOfYear'],
+            ['year'],
+        ];
     }
 
     /**

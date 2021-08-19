@@ -11,27 +11,27 @@ declare(strict_types=1);
  */
 namespace Tests\Carbon;
 
-use BadMethodCallException;
 use Carbon\Carbon;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class StrictModeTest extends AbstractTestCase
 {
     public function testSafeCreateDateTimeZoneWithStrictMode1()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown or bad timezone (-15)'
-        ));
+        );
 
         Carbon::createFromDate(2001, 1, 1, -15);
     }
 
     public function testSafeCreateDateTimeZoneWithStrictMode2()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown or bad timezone (foobar)'
-        ));
+        );
 
         Carbon::createFromDate(2001, 1, 1, 'foobar');
     }
@@ -45,9 +45,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testSetWithStrictMode()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown setter \'foobar\''
-        ));
+        );
 
         /** @var mixed $date */
         $date = Carbon::now();
@@ -56,9 +57,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testGetWithStrictMode()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown getter \'foobar\''
-        ));
+        );
 
         /** @var mixed $date */
         $date = Carbon::now();
@@ -76,9 +78,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testIsSameUnitWithStrictMode()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Bad comparison unit: \'foobar\''
-        ));
+        );
 
         Carbon::now()->isSameUnit('foobar');
     }
@@ -91,9 +94,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testAddRealUnitWithStrictMode()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid unit for real timestamp add/sub: \'foobar\''
-        ));
+        );
 
         Carbon::now()->addRealUnit('foobar');
     }
@@ -107,9 +111,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testCallWithStrictMode()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method foobar does not exist.'
-        ));
+        );
 
         /** @var mixed $date */
         $date = Carbon::now();
@@ -126,9 +131,10 @@ class StrictModeTest extends AbstractTestCase
 
     public function testStaticCallWithStrictMode()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method Carbon\Carbon::foobar does not exist.'
-        ));
+        );
 
         Carbon::foobar();
     }

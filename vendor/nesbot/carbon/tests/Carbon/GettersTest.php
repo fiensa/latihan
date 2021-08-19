@@ -12,17 +12,13 @@ declare(strict_types=1);
 namespace Tests\Carbon;
 
 use Carbon\Carbon;
-use Generator;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class GettersTest extends AbstractTestCase
 {
     public function testGettersThrowExceptionOnUnknownGetter()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
-            "Unknown getter 'doesNotExit'"
-        ));
+        $this->expectException(\InvalidArgumentException::class);
 
         /** @var mixed $d */
         $d = Carbon::create(1234, 5, 6, 7, 8, 9);
@@ -240,20 +236,22 @@ class GettersTest extends AbstractTestCase
         $this->assertSame($age, $d->age);
     }
 
-    public function dataProviderTestQuarter(): Generator
+    public function dataProviderTestQuarter()
     {
-        yield [1, 1];
-        yield [2, 1];
-        yield [3, 1];
-        yield [4, 2];
-        yield [5, 2];
-        yield [6, 2];
-        yield [7, 3];
-        yield [8, 3];
-        yield [9, 3];
-        yield [10, 4];
-        yield [11, 4];
-        yield [12, 4];
+        return [
+            [1, 1],
+            [2, 1],
+            [3, 1],
+            [4, 2],
+            [5, 2],
+            [6, 2],
+            [7, 3],
+            [8, 3],
+            [9, 3],
+            [10, 4],
+            [11, 4],
+            [12, 4],
+        ];
     }
 
     /**

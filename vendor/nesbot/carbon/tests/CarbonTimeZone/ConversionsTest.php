@@ -15,7 +15,6 @@ namespace Tests\CarbonTimeZone;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateTimeZone;
-use Generator;
 use InvalidArgumentException;
 use stdClass;
 use Tests\AbstractTestCaseWithOldNow;
@@ -49,32 +48,34 @@ class ConversionsTest extends AbstractTestCaseWithOldNow
         $this->assertSame('America/Chicago', (new CarbonTimeZone('America/Toronto'))->toOffsetTimeZone($date)->toRegionTimeZone($date)->getName());
     }
 
-    public function dataProviderToOffsetName(): Generator
+    public function dataProviderToOffsetName()
     {
-        // timezone - number
-        yield ['2018-12-20', '-05:00', -5];
-        yield ['2018-06-20', '-05:00', -5];
-        // timezone - use offset
-        yield ['2018-12-20', '-05:00', '-05:00'];
-        yield ['2018-06-20', '-05:00', '-05:00'];
-        // timezone - by name - with daylight time
-        yield ['2018-12-20', '-05:00', 'America/Toronto'];
-        yield ['2018-06-20', '-04:00', 'America/Toronto'];
-        // timezone - by name - without daylight time
-        yield ['2018-12-20', '+03:00', 'Asia/Baghdad'];
-        yield ['2018-06-20', '+03:00', 'Asia/Baghdad'];
-        // timezone - no full hour - the same time
-        yield ['2018-12-20', '-09:30', 'Pacific/Marquesas'];
-        yield ['2018-06-20', '-09:30', 'Pacific/Marquesas'];
-        // timezone - no full hour -
-        yield ['2018-12-20', '-03:30', 'America/St_Johns'];
-        yield ['2018-06-20', '-02:30', 'America/St_Johns'];
-        // timezone - no full hour +
-        yield ['2018-12-20', '+13:45', 'Pacific/Chatham'];
-        yield ['2018-06-20', '+12:45', 'Pacific/Chatham'];
-        // timezone - UTC
-        yield ['2018-12-20', '+00:00', 'UTC'];
-        yield ['2018-06-20', '+00:00', 'UTC'];
+        return [
+            // timezone - number
+            ['2018-12-20', '-05:00', -5],
+            ['2018-06-20', '-05:00', -5],
+            // timezone - use offset
+            ['2018-12-20', '-05:00', '-05:00'],
+            ['2018-06-20', '-05:00', '-05:00'],
+            // timezone - by name - with daylight time
+            ['2018-12-20', '-05:00', 'America/Toronto'],
+            ['2018-06-20', '-04:00', 'America/Toronto'],
+            // timezone - by name - without daylight time
+            ['2018-12-20', '+03:00', 'Asia/Baghdad'],
+            ['2018-06-20', '+03:00', 'Asia/Baghdad'],
+            // timezone - no full hour - the same time
+            ['2018-12-20', '-09:30', 'Pacific/Marquesas'],
+            ['2018-06-20', '-09:30', 'Pacific/Marquesas'],
+            // timezone - no full hour -
+            ['2018-12-20', '-03:30', 'America/St_Johns'],
+            ['2018-06-20', '-02:30', 'America/St_Johns'],
+            // timezone - no full hour +
+            ['2018-12-20', '+13:45', 'Pacific/Chatham'],
+            ['2018-06-20', '+12:45', 'Pacific/Chatham'],
+            // timezone - UTC
+            ['2018-12-20', '+00:00', 'UTC'],
+            ['2018-06-20', '+00:00', 'UTC'],
+        ];
     }
 
     /**
@@ -139,9 +140,8 @@ class ConversionsTest extends AbstractTestCaseWithOldNow
 
     public function testCastException()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
-            'stdClass has not the instance() method needed to cast the date.'
-        ));
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('stdClass has not the instance() method needed to cast the date.');
 
         (new CarbonTimeZone('America/Toronto'))->cast(stdClass::class);
     }
@@ -154,9 +154,10 @@ class ConversionsTest extends AbstractTestCaseWithOldNow
 
     public function testInvalidRegionForOffsetInStrictMode()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown timezone for offset -54000 seconds.'
-        ));
+        );
 
         (new CarbonTimeZone(-15))->toRegionTimeZone();
     }

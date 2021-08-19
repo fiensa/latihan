@@ -11,9 +11,7 @@ declare(strict_types=1);
  */
 namespace Tests\CarbonInterval;
 
-use BadMethodCallException;
 use Carbon\CarbonInterval;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class SettersTest extends AbstractTestCase
@@ -180,9 +178,10 @@ class SettersTest extends AbstractTestCase
 
     public function testInvalidSetter()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown setter \'doesNotExit\''
-        ));
+        );
 
         /** @var mixed $ci */
         $ci = new CarbonInterval;
@@ -191,9 +190,10 @@ class SettersTest extends AbstractTestCase
 
     public function testInvalidFluentSetter()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Unknown fluent setter \'doesNotExit\''
-        ));
+        );
 
         /** @var mixed $ci */
         $ci = new CarbonInterval;
@@ -202,9 +202,10 @@ class SettersTest extends AbstractTestCase
 
     public function testInvalidStaticFluentSetter()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Unknown fluent constructor \'doesNotExit\''
-        ));
+        );
 
         CarbonInterval::doesNotExit(123);
     }

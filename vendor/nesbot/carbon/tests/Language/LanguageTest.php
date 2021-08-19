@@ -19,9 +19,9 @@ class LanguageTest extends AbstractTestCase
     public function testAll()
     {
         $all = Language::all();
-        $this->assertIsArray($all);
+        $this->assertTrue(\is_array($all));
         $this->assertArrayHasKey('en', $all);
-        $this->assertIsArray($all['en']);
+        $this->assertTrue(\is_array($all['en']));
         $this->assertArrayHasKey('isoName', $all['en']);
         $this->assertSame('English', $all['en']['isoName']);
     }
@@ -29,7 +29,7 @@ class LanguageTest extends AbstractTestCase
     public function testRegions()
     {
         $regions = Language::regions();
-        $this->assertIsArray($regions);
+        $this->assertTrue(\is_array($regions));
         $this->assertArrayHasKey('US', $regions);
         $this->assertSame('United States of America', $regions['US']);
     }
