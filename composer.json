@@ -9,7 +9,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "version": "1.0.0-dev",
+    "version": "v2.0.4-p1",
     "extra": {
         "laravel": {
             "providers": [

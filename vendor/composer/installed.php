@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0-dev',
-        'version' => '1.0.0.0-dev',
+        'pretty_version' => 'v2.0.4-p1',
+        'version' => '2.0.4.0-patch1',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'arungruang/latihan' => array(
-            'pretty_version' => '1.0.0-dev',
-            'version' => '1.0.0.0-dev',
+            'pretty_version' => 'v2.0.4-p1',
+            'version' => '2.0.4.0-patch1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
