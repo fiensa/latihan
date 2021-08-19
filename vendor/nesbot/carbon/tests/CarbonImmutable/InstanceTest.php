@@ -17,7 +17,6 @@ use Carbon\CarbonImmutable as Carbon;
 use Carbon\CarbonInterface;
 use DateTime;
 use DateTimeZone;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class InstanceTest extends AbstractTestCase
@@ -131,9 +130,10 @@ class InstanceTest extends AbstractTestCase
 
     public function testInvalidCast()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'DateTimeZone has not the instance() method needed to cast the date.'
-        ));
+        );
 
         $carbon = new Carbon('2017-06-27 13:14:15.123456', 'Europe/Paris');
         $carbon->cast(DateTimeZone::class);

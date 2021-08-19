@@ -13,8 +13,6 @@ namespace Tests\CarbonImmutable;
 
 use \DateTime;
 use Carbon\CarbonImmutable as Carbon;
-use Generator;
-use InvalidArgumentException;
 use stdClass;
 use Tests\AbstractTestCase;
 
@@ -281,9 +279,10 @@ class IsTest extends AbstractTestCase
 
     public function testIsSameFoobar()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Bad comparison unit: \'foobar\''
-        ));
+        );
 
         Carbon::now()->isSameUnit('foobar', Carbon::now()->subMillennium());
     }
@@ -674,9 +673,10 @@ class IsTest extends AbstractTestCase
 
     public function testIsSameAsWithInvalidArgument()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Expected null, string, DateTime or DateTimeInterface, stdClass given'
-        ));
+        );
 
         $current = Carbon::createFromDate(2012, 1, 2);
         $current->isSameAs('Y-m-d', new stdClass());
@@ -913,46 +913,50 @@ class IsTest extends AbstractTestCase
         $this->assertFalse(Carbon::hasFormat('12/30/2019', 'd/m/Y'));
     }
 
-    public function getFormatLetters(): Generator
+    public function getFormatLetters()
     {
-        yield ['d'];
-        yield ['D'];
-        yield ['j'];
-        yield ['l'];
-        yield ['N'];
-        yield ['S'];
-        yield ['w'];
-        yield ['z'];
-        yield ['W'];
-        yield ['F'];
-        yield ['m'];
-        yield ['M'];
-        yield ['n'];
-        yield ['t'];
-        yield ['L'];
-        yield ['o'];
-        yield ['Y'];
-        yield ['y'];
-        yield ['a'];
-        yield ['A'];
-        yield ['B'];
-        yield ['g'];
-        yield ['G'];
-        yield ['h'];
-        yield ['H'];
-        yield ['i'];
-        yield ['s'];
-        yield ['u'];
-        yield ['v'];
-        yield ['e'];
-        yield ['I'];
-        yield ['O'];
-        yield ['P'];
-        yield ['T'];
-        yield ['Z'];
-        yield ['U'];
-        yield ['c'];
-        yield ['r'];
+        return array_map(static function ($letter) {
+            return [$letter];
+        }, [
+            'd',
+            'D',
+            'j',
+            'l',
+            'N',
+            'S',
+            'w',
+            'z',
+            'W',
+            'F',
+            'm',
+            'M',
+            'n',
+            't',
+            'L',
+            'o',
+            'Y',
+            'y',
+            'a',
+            'A',
+            'B',
+            'g',
+            'G',
+            'h',
+            'H',
+            'i',
+            's',
+            'u',
+            'v',
+            'e',
+            'I',
+            'O',
+            'P',
+            'T',
+            'Z',
+            'U',
+            'c',
+            'r',
+        ]);
     }
 
     /**

@@ -20,7 +20,6 @@ use Closure;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Throwable;
 
 abstract class AbstractTestCase extends TestCase
 {
@@ -217,7 +216,7 @@ abstract class AbstractTestCase extends TestCase
 
     public function assertInstanceOfCarbonInterval($d)
     {
-        $this->assertInstanceOf(CarbonInterval::class, $d);
+        $this->assertInstanceOf('Carbon\CarbonInterval', $d);
     }
 
     public function wrapWithTestNow(Closure $func, CarbonInterface $dt = null)
@@ -258,7 +257,7 @@ abstract class AbstractTestCase extends TestCase
 
         try {
             $func();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $exception = $e;
         }
 

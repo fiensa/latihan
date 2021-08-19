@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace Tests\Carbon;
 
 use Carbon\Carbon;
-use Generator;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class StartEndOfTest extends AbstractTestCase
@@ -440,20 +438,22 @@ class StartEndOfTest extends AbstractTestCase
         $this->assertInstanceOfCarbon($dt->startOfQuarter());
     }
 
-    public function dataProviderTestStartOfQuarter(): Generator
+    public function dataProviderTestStartOfQuarter()
     {
-        yield [1, 1];
-        yield [2, 1];
-        yield [3, 1];
-        yield [4, 4];
-        yield [5, 4];
-        yield [6, 4];
-        yield [7, 7];
-        yield [8, 7];
-        yield [9, 7];
-        yield [10, 10];
-        yield [11, 10];
-        yield [12, 10];
+        return [
+            [1, 1],
+            [2, 1],
+            [3, 1],
+            [4, 4],
+            [5, 4],
+            [6, 4],
+            [7, 7],
+            [8, 7],
+            [9, 7],
+            [10, 10],
+            [11, 10],
+            [12, 10],
+        ];
     }
 
     /**
@@ -474,20 +474,22 @@ class StartEndOfTest extends AbstractTestCase
         $this->assertInstanceOfCarbon($dt->endOfQuarter());
     }
 
-    public function dataProviderTestEndOfQuarter(): Generator
+    public function dataProviderTestEndOfQuarter()
     {
-        yield [1, 3, 31];
-        yield [2, 3, 31];
-        yield [3, 3, 31];
-        yield [4, 6, 30];
-        yield [5, 6, 30];
-        yield [6, 6, 30];
-        yield [7, 9, 30];
-        yield [8, 9, 30];
-        yield [9, 9, 30];
-        yield [10, 12, 31];
-        yield [11, 12, 31];
-        yield [12, 12, 31];
+        return [
+            [1, 3, 31],
+            [2, 3, 31],
+            [3, 3, 31],
+            [4, 6, 30],
+            [5, 6, 30],
+            [6, 6, 30],
+            [7, 9, 30],
+            [8, 9, 30],
+            [9, 9, 30],
+            [10, 12, 31],
+            [11, 12, 31],
+            [12, 12, 31],
+        ];
     }
 
     /**
@@ -568,18 +570,20 @@ class StartEndOfTest extends AbstractTestCase
 
     public function testStartOfInvalidUnit()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown unit \'microsecond\''
-        ));
+        );
 
         Carbon::now()->startOf('microsecond');
     }
 
     public function testEndOfInvalidUnit()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Unknown unit \'microsecond\''
-        ));
+        );
 
         Carbon::now()->endOf('microsecond');
     }

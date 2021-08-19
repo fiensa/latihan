@@ -20,14 +20,20 @@ class CreateStrictTest extends AbstractTestCase
 {
     public function testCreateStrictThrowsExceptionForSecondLowerThanZero()
     {
-        $this->expectExceptionObject(new OutOfRangeException('second', 0, 99, -1));
+        $this->expectException(OutOfRangeException::class);
+        $this->expectExceptionMessage(
+            'second must be between 0 and 99, -1 given'
+        );
 
         Carbon::createStrict(null, null, null, null, null, -1);
     }
 
     public function testCreateStrictThrowsExceptionForMonthOverRange()
     {
-        $this->expectExceptionObject(new OutOfRangeException('month', 0, 99, 9001));
+        $this->expectException(OutOfRangeException::class);
+        $this->expectExceptionMessage(
+            'month must be between 0 and 99, 9001 given'
+        );
 
         Carbon::createStrict(null, 9001);
     }

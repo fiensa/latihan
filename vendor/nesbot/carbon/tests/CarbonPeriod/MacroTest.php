@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace Tests\CarbonPeriod;
 
-use BadMethodCallException;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use ReflectionClass;
@@ -93,7 +92,7 @@ class MacroTest extends AbstractTestCase
         /** @var mixed $period */
         $period = new CarbonPeriod;
 
-        $this->assertInstanceOf(CarbonPeriod::class, $period->myself());
+        $this->assertInstanceOf('Carbon\CarbonPeriod', $period->myself());
         $this->assertSame($period, $period->myself());
     }
 
@@ -119,7 +118,7 @@ class MacroTest extends AbstractTestCase
             return new static;
         });
 
-        $this->assertInstanceOf(CarbonPeriod::class, CarbonPeriod::newMyself());
+        $this->assertInstanceOf('Carbon\CarbonPeriod', CarbonPeriod::newMyself());
     }
 
     public function testRegisterNonClosureMacro()
@@ -145,9 +144,10 @@ class MacroTest extends AbstractTestCase
 
     public function testCallNonExistingMacro()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method nonExistingMacro does not exist.'
-        ));
+        );
 
         /** @var mixed $period */
         $period = CarbonPeriod::create();
@@ -157,9 +157,10 @@ class MacroTest extends AbstractTestCase
 
     public function testCallNonExistingMacroStatically()
     {
-        $this->expectExceptionObject(new BadMethodCallException(
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage(
             'Method nonExistingMacro does not exist.'
-        ));
+        );
 
         CarbonPeriod::nonExistingMacro();
     }

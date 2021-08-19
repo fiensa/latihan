@@ -11,10 +11,8 @@ declare(strict_types=1);
  */
 namespace Tests\Carbon;
 
-use BadMethodCallException;
 use Carbon\Carbon;
 use Tests\AbstractTestCaseWithOldNow;
-use Throwable;
 
 class GenericMacroTest extends AbstractTestCaseWithOldNow
 {
@@ -36,9 +34,9 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
                 }
 
                 return new static($time);
-            } catch (Throwable $exception) {
+            } catch (\Throwable $exception) {
                 if (stripos($exception->getMessage(), 'Failed to parse') !== false) {
-                    throw new BadMethodCallException('Try next macro', 0, $exception);
+                    throw new \BadMethodCallException('Try next macro', 0, $exception);
                 }
 
                 throw $exception;
@@ -55,7 +53,7 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
 
         try {
             Carbon::fooBar();
-        } catch (BadMethodCallException $exception) {
+        } catch (\BadMethodCallException $exception) {
             $message = $exception->getMessage();
         }
 
@@ -65,7 +63,7 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
 
         try {
             $now->barBiz();
-        } catch (BadMethodCallException $exception) {
+        } catch (\BadMethodCallException $exception) {
             $message = $exception->getMessage();
         }
 
@@ -79,9 +77,9 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
 
             try {
                 return self::this()->modify($time);
-            } catch (Throwable $exception) {
+            } catch (\Throwable $exception) {
                 if (stripos($exception->getMessage(), 'Failed to parse') !== false) {
-                    throw new BadMethodCallException('Try next macro', 0, $exception);
+                    throw new \BadMethodCallException('Try next macro', 0, $exception);
                 }
 
                 throw $exception;
@@ -98,7 +96,7 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
 
         try {
             Carbon::fooBar();
-        } catch (BadMethodCallException $exception) {
+        } catch (\BadMethodCallException $exception) {
             $message = $exception->getMessage();
         }
 
@@ -108,7 +106,7 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
 
         try {
             $now->barBiz();
-        } catch (BadMethodCallException $exception) {
+        } catch (\BadMethodCallException $exception) {
             $message = $exception->getMessage();
         }
 
@@ -119,21 +117,21 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
     {
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'myPrefix')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'first';
         });
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'myPrefix')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'second';
         }, 1);
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'myPrefix')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'third';
@@ -155,21 +153,21 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
     {
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'mlp')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'first';
         });
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'mlp')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'second';
         }, 1);
         Carbon::genericMacro(function ($method) {
             if (!str_starts_with($method, 'mlp')) {
-                throw new BadMethodCallException('Try next macro', 0);
+                throw new \BadMethodCallException('Try next macro', 0);
             }
 
             return 'third';
@@ -183,14 +181,14 @@ class GenericMacroTest extends AbstractTestCaseWithOldNow
             'genericMacros' => [
                 function ($method) {
                     if (!str_starts_with($method, 'mlp')) {
-                        throw new BadMethodCallException('Try next macro', 0);
+                        throw new \BadMethodCallException('Try next macro', 0);
                     }
 
                     return 'local-first';
                 },
                 function ($method) {
                     if (!str_starts_with($method, 'mlp')) {
-                        throw new BadMethodCallException('Try next macro', 0);
+                        throw new \BadMethodCallException('Try next macro', 0);
                     }
 
                     return 'local-second';

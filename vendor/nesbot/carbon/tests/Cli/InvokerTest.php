@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 namespace Tests\Cli;
 
-use Carbon\Cli;
 use Carbon\Cli\Invoker;
 use Tests\AbstractTestCase;
 
@@ -47,6 +46,6 @@ class InvokerTest extends AbstractTestCase
         $this->assertNull($lastCommand);
         $this->assertSame('', $contents);
         $this->assertTrue($return);
-        $this->assertSame(['file', 'install', $exec], Cli::$lastParameters);
+        $this->assertSame(['file', 'install', $exec], \Carbon\Cli::$lastParameters);
     }
 }

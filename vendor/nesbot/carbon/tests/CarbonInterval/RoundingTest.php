@@ -11,9 +11,10 @@ class RoundingTest extends AbstractTestCase
 {
     public function testThrowsExceptionForCompositeInterval()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Rounding is only possible with single unit intervals.'
-        ));
+        );
 
         CarbonInterval::days(2)->round('2 hours 50 minutes');
     }

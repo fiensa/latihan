@@ -19,31 +19,22 @@ class CreateFromFormatTest extends AbstractTestCase
 {
     public function testDefaults()
     {
-        $this->expectExceptionObject(new ParseErrorException(
-            'number',
-            ''
-        ));
-
+        $this->expectException(ParseErrorException::class);
+        $this->expectExceptionMessage('Format expected number but data is missing');
         CarbonInterval::createFromFormat('H:i:s', '');
     }
 
     public function testNulls()
     {
-        $this->expectExceptionObject(new ParseErrorException(
-            'number',
-            ''
-        ));
-
+        $this->expectException(ParseErrorException::class);
+        $this->expectExceptionMessage('Format expected number but data is missing');
         CarbonInterval::createFromFormat('H:i:s', null);
     }
 
     public function testTrailingData()
     {
-        $this->expectExceptionObject(new ParseErrorException(
-            'end of string',
-            ':25'
-        ));
-
+        $this->expectException(ParseErrorException::class);
+        $this->expectExceptionMessage("Format expected end of string but get ':25'");
         CarbonInterval::createFromFormat('H:i', '01:30:25');
     }
 
@@ -55,7 +46,6 @@ class CreateFromFormatTest extends AbstractTestCase
             "Allowed substitutes for interval formats are y, Y, o, m, n, W, d, j, z, h, g, H, G, i, s, u, v\n".
             'See https://php.net/manual/en/function.date.php for their meaning'
         );
-
         CarbonInterval::createFromFormat('N', '4');
     }
 

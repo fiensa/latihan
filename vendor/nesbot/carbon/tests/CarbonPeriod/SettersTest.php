@@ -17,7 +17,6 @@ use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use DateInterval;
 use DateTime;
-use InvalidArgumentException;
 use Tests\AbstractTestCase;
 use Tests\CarbonPeriod\Fixtures\AbstractCarbon;
 
@@ -115,9 +114,10 @@ class SettersTest extends AbstractTestCase
 
     public function testSetDateClassInvalidArgumentException()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Given class does not implement Carbon\CarbonInterface: Carbon\CarbonInterval'
-        ));
+        );
 
         $period = new CarbonPeriod('2001-01-01', '2001-01-02');
 
@@ -126,72 +126,80 @@ class SettersTest extends AbstractTestCase
 
     public function testInvalidInterval()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid interval.'
-        ));
+        );
 
         CarbonPeriod::create()->setDateInterval(new DateTime);
     }
 
     public function testEmptyInterval()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Empty interval is not accepted.'
-        ));
+        );
 
         CarbonPeriod::create()->setDateInterval(new DateInterval('P0D'));
     }
 
     public function testInvalidNumberOfRecurrencesString()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid number of recurrences.'
-        ));
+        );
 
         CarbonPeriod::create()->setRecurrences('foo');
     }
 
     public function testInvalidNegativeNumberOfRecurrences()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid number of recurrences.'
-        ));
+        );
 
         CarbonPeriod::create()->setRecurrences(-4);
     }
 
     public function testInvalidOptions()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid options.'
-        ));
+        );
 
         CarbonPeriod::create()->setOptions('1');
     }
 
     public function testInvalidConstructorParameters()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid constructor parameters.'
-        ));
+        );
 
         CarbonPeriod::create([]);
     }
 
     public function testInvalidStartDate()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid start date.'
-        ));
+        );
 
         CarbonPeriod::create()->setStartDate(new DateInterval('P1D'));
     }
 
     public function testInvalidEndDate()
     {
-        $this->expectExceptionObject(new InvalidArgumentException(
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
             'Invalid end date.'
-        ));
+        );
 
         CarbonPeriod::create()->setEndDate(new DateInterval('P1D'));
     }
@@ -424,49 +432,5 @@ class SettersTest extends AbstractTestCase
         $this->assertSame($end, $period->getEndDate()->format('Y-m-d'));
         $this->assertSame(20, $period->getDateInterval()->dayz);
         $this->assertSame($opt, $period->getOptions());
-    }
-
-    public function testSetTimezone(): void
-    {
-        $period = CarbonPeriod::create(
-            '2018-03-25 00:00 America/Toronto',
-            'PT1H',
-            '2018-03-25 12:00 Europe/London'
-        )->setTimezone('Europe/Oslo');
-
-        $this->assertSame('2018-03-25 06:00 Europe/Oslo', $period->getStartDate()->format('Y-m-d H:i e'));
-        $this->assertSame('2018-03-25 13:00 Europe/Oslo', $period->getEndDate()->format('Y-m-d H:i e'));
-
-        $period = CarbonPeriod::create(
-            '2018-03-25 00:00 America/Toronto',
-            'PT1H',
-            5
-        )->setTimezone('Europe/Oslo');
-
-        $this->assertSame('2018-03-25 06:00 Europe/Oslo', $period->getStartDate()->format('Y-m-d H:i e'));
-        $this->assertNull($period->getEndDate());
-        $this->assertSame('2018-03-25 10:00 Europe/Oslo', $period->calculateEnd()->format('Y-m-d H:i e'));
-    }
-
-    public function testShiftTimezone(): void
-    {
-        $period = CarbonPeriod::create(
-            '2018-03-25 00:00 America/Toronto',
-            'PT1H',
-            '2018-03-25 12:00 Europe/London'
-        )->shiftTimezone('Europe/Oslo');
-
-        $this->assertSame('2018-03-25 00:00 Europe/Oslo', $period->getStartDate()->format('Y-m-d H:i e'));
-        $this->assertSame('2018-03-25 12:00 Europe/Oslo', $period->getEndDate()->format('Y-m-d H:i e'));
-
-        $period = CarbonPeriod::create(
-            '2018-03-26 00:00 America/Toronto',
-            'PT1H',
-            5
-        )->shiftTimezone('Europe/Oslo');
-
-        $this->assertSame('2018-03-26 00:00 Europe/Oslo', $period->getStartDate()->format('Y-m-d H:i e'));
-        $this->assertNull($period->getEndDate());
-        $this->assertSame('2018-03-26 04:00 Europe/Oslo', $period->calculateEnd()->format('Y-m-d H:i e'));
     }
 }
