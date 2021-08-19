@@ -14,6 +14,8 @@ namespace Tests\Carbon;
 use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
+use Generator;
+use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
 class SettersTest extends AbstractTestCase
@@ -254,7 +256,9 @@ class SettersTest extends AbstractTestCase
 
     public function testSetTimezoneWithInvalidTimezone()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionObject(new InvalidArgumentException(
+            'Unknown or bad timezone (sdf)'
+        ));
 
         $d = Carbon::now();
         $d->setTimezone('sdf');
@@ -262,10 +266,9 @@ class SettersTest extends AbstractTestCase
 
     public function testTimezoneWithInvalidTimezone()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown or bad timezone (sdf)'
-        );
+        ));
 
         /** @var mixed $d */
         $d = Carbon::now();
@@ -345,10 +348,9 @@ class SettersTest extends AbstractTestCase
 
     public function testTimezoneWithInvalidTimezoneSetter()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown or bad timezone (sdf)'
-        );
+        ));
 
         $d = Carbon::now();
         $d->timezone('sdf');
@@ -356,10 +358,9 @@ class SettersTest extends AbstractTestCase
 
     public function testTzWithInvalidTimezone()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown or bad timezone (sdf)'
-        );
+        ));
 
         /** @var mixed $d */
         $d = Carbon::now();
@@ -368,10 +369,9 @@ class SettersTest extends AbstractTestCase
 
     public function testTzWithInvalidTimezoneSetter()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown or bad timezone (sdf)'
-        );
+        ));
 
         $d = Carbon::now();
         $d->tz('sdf');
@@ -396,6 +396,9 @@ class SettersTest extends AbstractTestCase
         $this->assertSame(21600, $d2->getTimestamp() - $d->getTimestamp());
         $this->assertSame('America/Toronto', $d2->tzName);
         $this->assertSame('10:53:12.321654', $d2->format('H:i:s.u'));
+
+        $d = Carbon::parse('2018-03-25 00:53:12.321654 America/Toronto')->shiftTimezone('Europe/Oslo');
+        $this->assertSame('2018-03-25 00:53:12.321654 Europe/Oslo', $d->format('Y-m-d H:i:s.u e'));
     }
 
     public function testTimezoneUsingString()
@@ -484,7 +487,9 @@ class SettersTest extends AbstractTestCase
 
     public function testInvalidSetter()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionObject(new InvalidArgumentException(
+            "Unknown setter 'doesNotExit'"
+        ));
 
         /** @var mixed $date */
         $date = Carbon::now();
@@ -506,16 +511,14 @@ class SettersTest extends AbstractTestCase
         $this->assertCarbon($d, 2016, 2, 12, $hour, $minute, $second);
     }
 
-    public function dataProviderTestSetTimeFromTimeString()
+    public function dataProviderTestSetTimeFromTimeString(): Generator
     {
-        return [
-            [9, 15, 30, '09:15:30'],
-            [9, 15, 0, '09:15'],
-            [9, 0, 0, '09'],
-            [9, 5, 3, '9:5:3'],
-            [9, 5, 0, '9:5'],
-            [9, 0, 0, '9'],
-        ];
+        yield [9, 15, 30, '09:15:30'];
+        yield [9, 15, 0, '09:15'];
+        yield [9, 0, 0, '09'];
+        yield [9, 5, 3, '9:5:3'];
+        yield [9, 5, 0, '9:5'];
+        yield [9, 0, 0, '9'];
     }
 
     public function testWeekendDaysSetter()
@@ -633,20 +636,18 @@ class SettersTest extends AbstractTestCase
 
     public function testSetUnitNoOverflowInputUnitException()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown unit \'anyUnit\''
-        );
+        ));
 
         Carbon::now()->setUnitNoOverflow('anyUnit', 1, 'year');
     }
 
     public function testSetUnitNoOverflowOverflowUnitException()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Unknown unit \'anyUnit\''
-        );
+        ));
 
         Carbon::now()->setUnitNoOverflow('minute', 1, 'anyUnit');
     }

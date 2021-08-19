@@ -1,7 +1,6 @@
 {
     "name": "arungruang/latihan",
-    "description": "no",
-    "type": "library",
+    "description": "test package",
     "license": "MIT",
     "authors": [
         {
@@ -9,14 +8,7 @@
             "email": "fiensa123@gmail.com"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Arungruang\\Latihan\\": "src"
-        }
-    },
     "minimum-stability": "dev",
-    "version": "1.0.0",
-    "prefer-stable": true,
     "extra": {
         "laravel": {
             "providers": [
