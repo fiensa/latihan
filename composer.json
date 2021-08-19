@@ -1,0 +1,31 @@
+{
+    "name": "arungruang/latihan",
+    "description": "test package",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fiensa Afri Mahensa",
+            "email": "fiensa123@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Arungruang\\Latihan\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Arungruang\\Latihan\\LatihanServiceProvider"
+            ],
+            "aliases": {
+                "Latihan": "Arungruang\\Latihan\\Facade"
+            }
+        }
+    },
+    "require": {
+        "illuminate/support": "^5.6"
+    }
+}
