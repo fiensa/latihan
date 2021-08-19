@@ -20,7 +20,9 @@ use Carbon\Exceptions\NotAPeriodException;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Generator;
 use InvalidArgumentException;
+use stdClass;
 use Tests\AbstractTestCase;
 
 class CreateTest extends AbstractTestCase
@@ -40,29 +42,27 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function provideIso8601String()
+    public function provideIso8601String(): Generator
     {
-        return [
-            [
-                ['R4/2012-07-01T00:00:00/P7D'],
-                ['2012-07-01', '2012-07-08', '2012-07-15', '2012-07-22'],
-            ],
-            [
-                ['R4/2012-07-01T00:00:00/P7D', CarbonPeriod::EXCLUDE_START_DATE],
-                ['2012-07-08', '2012-07-15', '2012-07-22', '2012-07-29'],
-            ],
-            [
-                ['2012-07-01/P2D/2012-07-07'],
-                ['2012-07-01', '2012-07-03', '2012-07-05', '2012-07-07'],
-            ],
-            [
-                ['2012-07-01/2012-07-04', CarbonPeriod::EXCLUDE_END_DATE],
-                ['2012-07-01', '2012-07-02', '2012-07-03'],
-            ],
-            [
-                ['R2/2012-07-01T10:30:45Z/P2D'],
-                ['2012-07-01 10:30:45 UTC', '2012-07-03 10:30:45 UTC'],
-            ],
+        yield [
+            ['R4/2012-07-01T00:00:00/P7D'],
+            ['2012-07-01', '2012-07-08', '2012-07-15', '2012-07-22'],
+        ];
+        yield [
+            ['R4/2012-07-01T00:00:00/P7D', CarbonPeriod::EXCLUDE_START_DATE],
+            ['2012-07-08', '2012-07-15', '2012-07-22', '2012-07-29'],
+        ];
+        yield [
+            ['2012-07-01/P2D/2012-07-07'],
+            ['2012-07-01', '2012-07-03', '2012-07-05', '2012-07-07'],
+        ];
+        yield [
+            ['2012-07-01/2012-07-04', CarbonPeriod::EXCLUDE_END_DATE],
+            ['2012-07-01', '2012-07-02', '2012-07-03'],
+        ];
+        yield [
+            ['R2/2012-07-01T10:30:45Z/P2D'],
+            ['2012-07-01 10:30:45 UTC', '2012-07-03 10:30:45 UTC'],
         ];
     }
 
@@ -96,12 +96,10 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function providePartialIso8601String()
+    public function providePartialIso8601String(): Generator
     {
-        return [
-            ['2008-02-15/03-14', '2008-02-15', '2008-03-14'],
-            ['2007-12-14T13:30/15:30', '2007-12-14 13:30', '2007-12-14 15:30'],
-        ];
+        yield ['2008-02-15/03-14', '2008-02-15', '2008-03-14'];
+        yield ['2007-12-14T13:30/15:30', '2007-12-14 13:30', '2007-12-14 15:30'];
     }
 
     /**
@@ -109,22 +107,21 @@ class CreateTest extends AbstractTestCase
      */
     public function testCreateFromInvalidIso8601String($iso)
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid ISO 8601 specification: $iso");
+        $this->expectExceptionObject(new InvalidArgumentException(
+            "Invalid ISO 8601 specification: $iso"
+        ));
 
         CarbonPeriod::create($iso);
     }
 
-    public function provideInvalidIso8601String()
+    public function provideInvalidIso8601String(): Generator
     {
-        return [
-            ['R2/R4'],
-            ['2008-02-15/2008-02-16/2008-02-17'],
-            ['P1D/2008-02-15/P2D'],
-            ['2008-02-15/R5'],
-            ['P2D/R2'],
-            ['/'],
-        ];
+        yield ['R2/R4'];
+        yield ['2008-02-15/2008-02-16/2008-02-17'];
+        yield ['P1D/2008-02-15/P2D'];
+        yield ['2008-02-15/R5'];
+        yield ['P2D/R2'];
+        yield ['/'];
     }
 
     /**
@@ -145,42 +142,40 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function provideStartDateAndEndDate()
+    public function provideStartDateAndEndDate(): Generator
     {
-        return [
-            [
+        yield [
                 ['2015-09-30', '2015-10-03'],
                 ['2015-09-30', '2015-10-01', '2015-10-02', '2015-10-03'],
-            ],
-            [
+            ];
+        yield [
                 ['2015-09-30', '2015-10-03', CarbonPeriod::EXCLUDE_START_DATE],
                 ['2015-10-01', '2015-10-02', '2015-10-03'],
-            ],
-            [
+            ];
+        yield [
                 ['2015-09-30', '2015-10-03', CarbonPeriod::EXCLUDE_END_DATE],
                 ['2015-09-30', '2015-10-01', '2015-10-02'],
-            ],
-            [
+            ];
+        yield [
                 ['2015-09-30', '2015-10-03', CarbonPeriod::EXCLUDE_START_DATE | CarbonPeriod::EXCLUDE_END_DATE],
                 ['2015-10-01', '2015-10-02'],
-            ],
-            [
+            ];
+        yield [
                 ['2015-10-02', '2015-10-03', CarbonPeriod::EXCLUDE_START_DATE | CarbonPeriod::EXCLUDE_END_DATE],
                 [],
-            ],
-            [
+            ];
+        yield [
                 ['2015-10-02', '2015-10-02'],
                 ['2015-10-02'],
-            ],
-            [
+            ];
+        yield [
                 ['2015-10-02', '2015-10-02', CarbonPeriod::EXCLUDE_START_DATE],
                 [],
-            ],
-            [
+            ];
+        yield [
                 ['2015-10-02', '2015-10-02', CarbonPeriod::EXCLUDE_END_DATE],
                 [],
-            ],
-        ];
+            ];
     }
 
     /**
@@ -202,41 +197,44 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function provideStartDateAndIntervalAndEndDate()
+    public function provideStartDateAndIntervalAndEndDate(): Generator
     {
-        return [
+        yield [
+            ['2018-04-21', 'P3D', '2018-04-26'],
+            ['2018-04-21', '2018-04-24'],
+        ];
+        yield [
+            ['2018-04-21 16:15', 'PT15M', '2018-04-21 16:59:59'],
+            ['2018-04-21 16:15', '2018-04-21 16:30', '2018-04-21 16:45'],
+        ];
+        yield [
+            ['2018-04-21 16:15', 'PT15M', '2018-04-21 17:00'],
+            ['2018-04-21 16:15', '2018-04-21 16:30', '2018-04-21 16:45', '2018-04-21 17:00'],
+        ];
+        yield [
+            ['2018-04-21 17:00', 'PT45S', '2018-04-21 17:02', CarbonPeriod::EXCLUDE_START_DATE],
+            ['2018-04-21 17:00:45', '2018-04-21 17:01:30'],
+        ];
+        yield [
+            ['2017-12-31 22:00', 'PT2H', '2018-01-01 4:00', CarbonPeriod::EXCLUDE_END_DATE],
+            ['2017-12-31 22:00', '2018-01-01 0:00', '2018-01-01 2:00'],
+        ];
+        yield [
             [
-                ['2018-04-21', 'P3D', '2018-04-26'],
-                ['2018-04-21', '2018-04-24'],
+                '2017-12-31 23:59',
+                'PT30S',
+                '2018-01-01 0:01',
+                CarbonPeriod::EXCLUDE_START_DATE | CarbonPeriod::EXCLUDE_END_DATE,
             ],
-            [
-                ['2018-04-21 16:15', 'PT15M', '2018-04-21 16:59:59'],
-                ['2018-04-21 16:15', '2018-04-21 16:30', '2018-04-21 16:45'],
-            ],
-            [
-                ['2018-04-21 16:15', 'PT15M', '2018-04-21 17:00'],
-                ['2018-04-21 16:15', '2018-04-21 16:30', '2018-04-21 16:45', '2018-04-21 17:00'],
-            ],
-            [
-                ['2018-04-21 17:00', 'PT45S', '2018-04-21 17:02', CarbonPeriod::EXCLUDE_START_DATE],
-                ['2018-04-21 17:00:45', '2018-04-21 17:01:30'],
-            ],
-            [
-                ['2017-12-31 22:00', 'PT2H', '2018-01-01 4:00', CarbonPeriod::EXCLUDE_END_DATE],
-                ['2017-12-31 22:00', '2018-01-01 0:00', '2018-01-01 2:00'],
-            ],
-            [
-                ['2017-12-31 23:59', 'PT30S', '2018-01-01 0:01', CarbonPeriod::EXCLUDE_START_DATE | CarbonPeriod::EXCLUDE_END_DATE],
-                ['2017-12-31 23:59:30', '2018-01-01 0:00', '2018-01-01 0:00:30'],
-            ],
-            [
-                ['2018-04-21', 'P1D', '2018-04-21'],
-                ['2018-04-21'],
-            ],
-            [
-                ['2018-04-21', 'P1D', '2018-04-20 23:59:59'],
-                [],
-            ],
+            ['2017-12-31 23:59:30', '2018-01-01 0:00', '2018-01-01 0:00:30'],
+        ];
+        yield [
+            ['2018-04-21', 'P1D', '2018-04-21'],
+            ['2018-04-21'],
+        ];
+        yield [
+            ['2018-04-21', 'P1D', '2018-04-20 23:59:59'],
+            [],
         ];
     }
 
@@ -258,17 +256,15 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function provideStartDateAndIntervalAndRecurrences()
+    public function provideStartDateAndIntervalAndRecurrences(): Generator
     {
-        return [
-            [
-                ['2018-04-16', 'P2D', 3],
-                ['2018-04-16', '2018-04-18', '2018-04-20'],
-            ],
-            [
-                ['2018-04-30', 'P2M', 2, CarbonPeriod::EXCLUDE_START_DATE],
-                ['2018-06-30', '2018-08-30'],
-            ],
+        yield [
+            ['2018-04-16', 'P2D', 3],
+            ['2018-04-16', '2018-04-18', '2018-04-20'],
+        ];
+        yield [
+            ['2018-04-30', 'P2M', 2, CarbonPeriod::EXCLUDE_START_DATE],
+            ['2018-06-30', '2018-08-30'],
         ];
     }
 
@@ -289,26 +285,24 @@ class CreateTest extends AbstractTestCase
         );
     }
 
-    public function provideStartDateAndRecurrences()
+    public function provideStartDateAndRecurrences(): Generator
     {
-        return [
-            [
+        yield [
                 ['2018-04-16', 2],
                 ['2018-04-16', '2018-04-17'],
-            ],
-            [
+            ];
+        yield [
                 ['2018-04-30', 1],
                 ['2018-04-30'],
-            ],
-            [
+            ];
+        yield [
                 ['2018-04-30', 1, CarbonPeriod::EXCLUDE_START_DATE],
                 ['2018-05-01'],
-            ],
-            [
+            ];
+        yield [
                 ['2018-05-17', 0],
                 [],
-            ],
-        ];
+            ];
     }
 
     public function testCreateFromBaseClasses()
@@ -320,7 +314,11 @@ class CreateTest extends AbstractTestCase
         );
 
         $this->assertSame(
-            $this->standardizeDates(['2018-04-16', '2018-05-16', '2018-06-16']),
+            [
+                '2018-04-16 00:00:00 -04:00',
+                '2018-05-16 00:00:00 -04:00',
+                '2018-06-16 00:00:00 -04:00',
+            ],
             $this->standardizeDates($period)
         );
     }
@@ -330,25 +328,22 @@ class CreateTest extends AbstractTestCase
      */
     public function testCreateFromInvalidParameters(...$arguments)
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             'Invalid constructor parameters.'
-        );
+        ));
 
         CarbonPeriod::create(...$arguments);
     }
 
-    public function provideInvalidParameters()
+    public function provideInvalidParameters(): Generator
     {
-        return [
-            [new \stdClass, CarbonInterval::days(1), Carbon::tomorrow()],
-            [Carbon::now(), new \stdClass, Carbon::tomorrow()],
-            [Carbon::now(), CarbonInterval::days(1), new \stdClass],
-            [Carbon::yesterday(), Carbon::now(), Carbon::tomorrow()],
-            [CarbonInterval::day(), CarbonInterval::hour()],
-            [5, CarbonPeriod::EXCLUDE_START_DATE, CarbonPeriod::EXCLUDE_END_DATE],
-            ['2017-10-15/P3D', CarbonInterval::hour()],
-        ];
+        yield [new stdClass, CarbonInterval::days(1), Carbon::tomorrow()];
+        yield [Carbon::now(), new stdClass, Carbon::tomorrow()];
+        yield [Carbon::now(), CarbonInterval::days(1), new stdClass];
+        yield [Carbon::yesterday(), Carbon::now(), Carbon::tomorrow()];
+        yield [CarbonInterval::day(), CarbonInterval::hour()];
+        yield [5, CarbonPeriod::EXCLUDE_START_DATE, CarbonPeriod::EXCLUDE_END_DATE];
+        yield ['2017-10-15/P3D', CarbonInterval::hour()];
     }
 
     public function testCreateOnDstForwardChange()
@@ -583,8 +578,9 @@ class CreateTest extends AbstractTestCase
 
     public function testCreateFromCarbonInstanceInvalidMethod()
     {
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('Method unknownUnitsUntil does not exist.');
+        $this->expectExceptionObject(new BadMethodCallException(
+            'Method unknownUnitsUntil does not exist.'
+        ));
 
         /** @var object $date */
         $date = Carbon::create('2019-01-02');
@@ -657,8 +653,9 @@ class CreateTest extends AbstractTestCase
 
     public function testBadCast()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('DateTime has not the instance() method needed to cast the date.');
+        $this->expectExceptionObject(new InvalidArgumentException(
+            'DateTime has not the instance() method needed to cast the date.'
+        ));
 
         CarbonPeriod::create('2010-08-24', CarbonInterval::weeks(2), '2012-07-19')
             ->cast(DateTime::class);
@@ -695,18 +692,20 @@ class CreateTest extends AbstractTestCase
 
     public function testInstanceInvalidType()
     {
-        $this->expectException(NotAPeriodException::class);
-        $this->expectExceptionMessage('Argument 1 passed to Carbon\CarbonPeriod::Carbon\CarbonPeriod::instance() '.
-            'must be an instance of DatePeriod or Carbon\CarbonPeriod, string given.');
+        $this->expectExceptionObject(new NotAPeriodException(
+            'Argument 1 passed to Carbon\CarbonPeriod::Carbon\CarbonPeriod::instance() '.
+            'must be an instance of DatePeriod or Carbon\CarbonPeriod, string given.'
+        ));
 
         CarbonPeriod::instance('hello');
     }
 
     public function testInstanceInvalidInstance()
     {
-        $this->expectException(NotAPeriodException::class);
-        $this->expectExceptionMessage('Argument 1 passed to Carbon\CarbonPeriod::Carbon\CarbonPeriod::instance() '.
-            'must be an instance of DatePeriod or Carbon\CarbonPeriod, instance of Carbon\Carbon given.');
+        $this->expectExceptionObject(new NotAPeriodException(
+            'Argument 1 passed to Carbon\CarbonPeriod::Carbon\CarbonPeriod::instance() '.
+            'must be an instance of DatePeriod or Carbon\CarbonPeriod, instance of Carbon\Carbon given.'
+        ));
 
         CarbonPeriod::instance(Carbon::now());
     }

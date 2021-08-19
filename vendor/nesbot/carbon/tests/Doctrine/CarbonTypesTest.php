@@ -24,6 +24,7 @@ use Doctrine\DBAL\Platforms\DB2Platform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
+use Generator;
 use Tests\AbstractTestCase;
 
 class CarbonTypesTest extends AbstractTestCase
@@ -37,14 +38,12 @@ class CarbonTypesTest extends AbstractTestCase
         }
     }
 
-    public static function getTypes()
+    public static function getTypes(): Generator
     {
-        return [
-            ['datetime', Carbon::class, DateTimeType::class, false],
-            ['datetime_immutable', CarbonImmutable::class, DateTimeImmutableType::class, true],
-            ['carbon', Carbon::class, CarbonType::class, true],
-            ['carbon_immutable', CarbonImmutable::class, CarbonImmutableType::class, true],
-        ];
+        yield ['datetime', Carbon::class, DateTimeType::class, false];
+        yield ['datetime_immutable', CarbonImmutable::class, DateTimeImmutableType::class, true];
+        yield ['carbon', Carbon::class, CarbonType::class, true];
+        yield ['carbon_immutable', CarbonImmutable::class, CarbonImmutableType::class, true];
     }
 
     /**
@@ -129,11 +128,10 @@ class CarbonTypesTest extends AbstractTestCase
      */
     public function testConvertToPHPValueFailure(string $name, string $class)
     {
-        $this->expectException(ConversionException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new ConversionException(
             "Could not convert database value \"2020-0776-23 18:47\" to Doctrine Type $name. ".
             "Expected format: Y-m-d H:i:s.u or any format supported by $class::parse()"
-        );
+        ));
 
         Type::getType($name)->convertToPHPValue('2020-0776-23 18:47', new MySQL57Platform());
     }
@@ -169,11 +167,10 @@ class CarbonTypesTest extends AbstractTestCase
      */
     public function testConvertToDatabaseValueFailure(string $name)
     {
-        $this->expectException(ConversionException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new ConversionException(
             "Could not convert PHP value of type 'array' to type '$name'. ".
             'Expected one of the following types: null, DateTime, Carbon'
-        );
+        ));
 
         Type::getType($name)->convertToDatabaseValue([2020, 06, 23], new MySQL57Platform());
     }

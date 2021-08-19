@@ -8,13 +8,17 @@ use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
 use Carbon\Laravel\ServiceProvider;
+use Generator;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Events\EventDispatcher;
+use Illuminate\Support\Carbon as SupportCarbon;
+use Illuminate\Support\Facades\Date;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class ServiceProviderTest extends TestCase
 {
-    public function getDispatchers()
+    public function getDispatchers(): Generator
     {
         if (!class_exists(Dispatcher::class)) {
             include_once __DIR__.'/Dispatcher.php';
@@ -24,10 +28,8 @@ class ServiceProviderTest extends TestCase
             include_once __DIR__.'/EventDispatcher.php';
         }
 
-        return [
-            [new Dispatcher()],
-            [new EventDispatcher()],
-        ];
+        yield [new Dispatcher()];
+        yield [new EventDispatcher()];
     }
 
     /**
@@ -138,6 +140,7 @@ class ServiceProviderTest extends TestCase
         }');
 
         eval('namespace Illuminate\Support\Facades;
+        use Exception;
         class Date
         {
             public static $locale;
@@ -152,7 +155,7 @@ class ServiceProviderTest extends TestCase
                 static::$locale = $locale;
 
                 if ($locale === "fr") {
-                    throw new \Exception("stop");
+                    throw new Exception("stop");
                 }
             }
         }');
@@ -163,20 +166,22 @@ class ServiceProviderTest extends TestCase
         $service->app->register();
         $service->updateLocale();
 
-        $this->assertSame('de', \Illuminate\Support\Carbon::$locale);
-        $this->assertSame('de', \Illuminate\Support\Facades\Date::$locale);
+        $this->assertSame('de', SupportCarbon::$locale);
+        $this->assertSame('de', Date::$locale);
 
         $service->app->setLocale('fr');
         $service->updateLocale();
 
-        $this->assertSame('fr', \Illuminate\Support\Carbon::$locale);
-        $this->assertSame('fr', \Illuminate\Support\Facades\Date::$locale);
+        $this->assertSame('fr', SupportCarbon::$locale);
+        $this->assertSame('fr', Date::$locale);
 
         eval('namespace Carbon\Laravel;
+        use Illuminate\Events\Dispatcher;
+        use Tests\Laravel\App;
         function app()
         {
-            $app = new \Tests\Laravel\App();
-            $app->setEventDispatcher(new \Illuminate\Events\Dispatcher());
+            $app = new App();
+            $app->setEventDispatcher(new Dispatcher());
             $app->register();
             $app->setLocale("it");
 
@@ -184,10 +189,10 @@ class ServiceProviderTest extends TestCase
         }
         ');
 
-        $service->app = new \stdClass();
+        $service->app = new stdClass();
         $service->updateLocale();
 
-        $this->assertSame('it', \Illuminate\Support\Carbon::$locale);
-        $this->assertSame('it', \Illuminate\Support\Facades\Date::$locale);
+        $this->assertSame('it', SupportCarbon::$locale);
+        $this->assertSame('it', Date::$locale);
     }
 }

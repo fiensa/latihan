@@ -13,6 +13,7 @@ namespace Tests\Carbon;
 
 use Carbon\Carbon;
 use DateTime;
+use Generator;
 use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionObject;
@@ -41,8 +42,8 @@ class SerializationTest extends AbstractTestCase
     public function testSerialize()
     {
         $dt = Carbon::create(2016, 2, 1, 13, 20, 25);
-        $this->assertTrue(\in_array($dt->serialize(), $this->serialized, true));
-        $this->assertTrue(\in_array(serialize($dt), $this->serialized, true));
+        $this->assertContains($dt->serialize(), $this->serialized);
+        $this->assertContains(serialize($dt), $this->serialized);
     }
 
     public function testFromUnserialized()
@@ -63,15 +64,13 @@ class SerializationTest extends AbstractTestCase
         $this->assertSame('mercredi 18:30:11.654321', $copy->tz('Europe/Paris')->isoFormat('dddd HH:mm:ss.SSSSSS'));
     }
 
-    public function providerTestFromUnserializedWithInvalidValue()
+    public function providerTestFromUnserializedWithInvalidValue(): Generator
     {
-        return [
-            [null],
-            [true],
-            [false],
-            [123],
-            ['foobar'],
-        ];
+        yield [null];
+        yield [true];
+        yield [false];
+        yield [123];
+        yield ['foobar'];
     }
 
     /**
@@ -81,10 +80,9 @@ class SerializationTest extends AbstractTestCase
      */
     public function testFromUnserializedWithInvalidValue($value)
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
+        $this->expectExceptionObject(new InvalidArgumentException(
             "Invalid serialized value: $value"
-        );
+        ));
 
         Carbon::fromSerialized($value);
     }
