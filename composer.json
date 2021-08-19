@@ -31,9 +31,8 @@
     },
     "repositories": [
         {
-             "type": "vcs", 
-             "url": "https://github.com/fiensa/latihan.git"
-        },
-        { "packagist": false }
+            "type": "vcs",
+            "url": "https://github.com/fiensa/latihan.git"
+        }
     ]
 }
