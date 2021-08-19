@@ -217,7 +217,7 @@
     {
         "name": "nesbot/carbon",
         "version": "dev-master",
-        "version_normalized": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
@@ -267,7 +267,7 @@
                 ]
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Carbon\\": "src/Carbon/"
@@ -363,7 +363,7 @@
     {
         "name": "psr/simple-cache",
         "version": "dev-master",
-        "version_normalized": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/php-fig/simple-cache.git",
@@ -385,7 +385,7 @@
                 "dev-master": "1.0.x-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "Psr\\SimpleCache\\": "src/"
