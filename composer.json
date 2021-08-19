@@ -8,7 +8,7 @@
             "email": "fiensa123@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "extra": {
         "laravel": {
             "providers": [
