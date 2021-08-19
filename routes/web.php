@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/a', function () {
     return view('welcome');
 });
+
+Route::group(['namespace' => 'Arungruang\Latihan\Http\Controllers'], function()
+{
+    Route::get('about', ['uses' => 'LatihanController@index']);
+});
