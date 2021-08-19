@@ -9,6 +9,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": false,
     "extra": {
         "laravel": {
             "providers": [
@@ -19,14 +20,14 @@
             }
         }
     },
-    "require": {
-        "php": ">=7.0.0",
-        "illuminate/support": "^5.6"
-    },
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/fiensa/latihan.git"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "illuminate/support": "^5.6"
+    }
 }
