@@ -23,7 +23,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/fiensa/latihan.git"
+            "url": "git@github.com:fiensa/latihan.git"
         }
     ],
     "require": {
